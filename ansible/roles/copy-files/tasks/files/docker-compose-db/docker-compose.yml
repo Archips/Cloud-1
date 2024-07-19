@@ -1,0 +1,26 @@
+version: '3.1'
+
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    networks:
+      - cloud-1
+    restart: unless-stopped
+    build:
+      context: ./requirements/mariadb
+    env_file:
+        - ../.env
+    volumes:
+      - mariadb:/var/lib/mysql
+    expose:
+      - "3306:3306"
+
+volumes:
+  mariadb:
+    driver: local
+ 
+networks:
+  cloud-1:  # création du réseau
+    name: db_network
+    driver: bridge

@@ -1,0 +1,9 @@
+# ansible/install.yml
+---
+- hosts: all
+  remote_user: root
+  roles:
+    - install-docker
+    - copy-files
+    - launch-db
+    - launch-webapp

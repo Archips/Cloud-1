@@ -1,0 +1,11 @@
+---
+# tasks file for launch-webapp
+- name: Build Docker Compose
+  command: docker-compose build
+  args:
+    chdir: /home/files/docker-compose-app
+
+- name: Launch Docker Compose
+  command: docker-compose up -d
+  args:
+    chdir: /home/files/docker-compose-app

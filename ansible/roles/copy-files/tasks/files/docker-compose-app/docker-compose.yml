@@ -1,0 +1,49 @@
+version: '3.1'
+
+services:
+  wordpress:
+    image: wordpress
+    container_name: wordpress
+    networks:
+      - cloud-1
+    restart: unless-stopped
+    build:
+      context: ./requirements/wordpress
+    env_file:
+      - ../.env
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    expose:
+      - "9000:9000"
+      
+  nginx:
+    image: nginx
+    container_name: nginx
+    networks:
+      - cloud-1
+    depends_on:
+      - wordpress
+    restart: unless-stopped
+    build:
+      context: ./requirements/nginx
+    env_file:
+      - ../.env
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - wordpress:/var/www/html/wordpress
+    healthcheck:
+      interval: 5s
+      timeout: 1s
+      retries: 10
+      start_period: 5s
+
+volumes: 
+  wordpress:
+    driver: local
+
+networks:
+  cloud-1:  # création du réseau
+    name: db_network
+    external: true

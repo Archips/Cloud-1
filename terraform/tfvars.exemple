@@ -1,0 +1,5 @@
+# scaleway.auto.tfvars
+access_key = "YOUR_ACCESS_KEY"
+secret_key = "YOUR_SECRET_KEY"
+organization_id = "YOUR_ORGANIZATION_ID"
+project_id = "YOUR_PRJECT_ID"

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+sleep 10
+
+cd /var/www/html/wordpress
+
+if [ ! -f wp-config.php ]; then
+	echo "cREATING CONFIG .... !\n"
+	wp config create --allow-root \
+		--dbname=${SQL_DATABASE} \
+		--dbuser=${SQL_USER} \
+		--dbpass=${SQL_PASSWORD} \
+		--dbhost=mariadb \
+		--path='/var/www/html/wordpress' \
+		--url=https://${HOST}; 
+
+	wp core install	--allow-root \
+				--path='/var/www/html/wordpress' \
+				--url=https://${HOST} \
+				--title=${SITE_TITLE} \
+				--admin_user=${ADMIN_USER} \
+				--admin_password=${ADMIN_PASSWORD} \
+				--admin_email=${ADMIN_EMAIL};
+
+	wp user create		--allow-root \
+				${USER1_LOGIN} ${USER1_MAIL} \
+				--role=author \
+				--user_pass=${USER1_PASS} ;
+
+	# empty cache
+	wp cache flush --allow-root
+	echo "wp-config created successfully !"
+fi
+
+if [ ! -d /run/php ]; then
+	mkdir /run/php;
+fi
+
+# start the PHP FastCGI Process Manager (FPM) for PHP version 7.3 in the foreground
+exec /usr/sbin/php-fpm7.4 -F -R
